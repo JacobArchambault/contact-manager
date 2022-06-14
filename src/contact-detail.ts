@@ -1,8 +1,8 @@
-import {inject} from 'aurelia-framework';
-import {EventAggregator} from 'aurelia-event-aggregator';
-import {WebAPI} from './web-api';
-import {ContactUpdated,ContactViewed} from './messages';
-import {areEqual} from './utility';
+import { inject } from 'aurelia-framework';
+import { EventAggregator } from 'aurelia-event-aggregator';
+import { WebAPI } from './web-api';
+import { ContactUpdated, ContactViewed } from './messages';
+import { areEqual } from './utility';
 
 interface Contact {
   firstName: string;
@@ -12,21 +12,20 @@ interface Contact {
 
 @inject(WebAPI, EventAggregator)
 export class ContactDetail {
-  routeConfig;
+  routeConfig: { navModel: { setTitle: (arg0: string) => void; }; };
   contact: Contact;
   originalContact: Contact;
 
   constructor(private api: WebAPI, private ea: EventAggregator) { }
 
-  activate(params, routeConfig) {
+  async activate(params: { id: number; }, routeConfig: { navModel: { setTitle: (arg0: string) => void; }; }) {
     this.routeConfig = routeConfig;
 
-    return this.api.getContactDetails(params.id).then(contact => {
-      this.contact = <Contact>contact;
-      this.routeConfig.navModel.setTitle(this.contact.firstName);
-      this.originalContact = JSON.parse(JSON.stringify(this.contact));
-      this.ea.publish(new ContactViewed(this.contact));
-    });
+    const contact = await this.api.getContactDetails(params.id);
+    this.contact = <Contact>contact;
+    this.routeConfig.navModel.setTitle(this.contact.firstName);
+    this.originalContact = JSON.parse(JSON.stringify(this.contact));
+    this.ea.publish(new ContactViewed(this.contact));
   }
 
   get canSave() {
@@ -43,10 +42,10 @@ export class ContactDetail {
   }
 
   canDeactivate() {
-    if(!areEqual(this.originalContact, this.contact)){
+    if (!areEqual(this.originalContact, this.contact)) {
       let result = confirm('You have unsaved changes. Are you sure you wish to leave?');
 
-      if(!result) {
+      if (!result) {
         this.ea.publish(new ContactViewed(this.contact));
       }
 
