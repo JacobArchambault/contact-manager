@@ -13,7 +13,7 @@ export class App {
     config.options.pushState = true;
     config.options.root = '/';
     config.map([
-      { route: '', moduleId: PLATFORM.moduleName('no-selection'), title: 'Select' },
+      { route: '', moduleId: PLATFORM.moduleName('components/no-selection/no-selection'), title: 'Select' },
       { route: 'contacts/:id', moduleId: PLATFORM.moduleName('components/contact-detail/contact-detail'), name: 'contacts' }
     ]);
 
