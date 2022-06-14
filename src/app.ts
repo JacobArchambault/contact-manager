@@ -14,7 +14,7 @@ export class App {
     config.options.root = '/';
     config.map([
       { route: '', moduleId: PLATFORM.moduleName('no-selection'), title: 'Select' },
-      { route: 'contacts/:id', moduleId: PLATFORM.moduleName('contact-detail'), name: 'contacts' }
+      { route: 'contacts/:id', moduleId: PLATFORM.moduleName('models/contact-detail'), name: 'contacts' }
     ]);
 
     this.router = router;
